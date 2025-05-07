@@ -1,77 +1,135 @@
-Todo App API
-Bu, kullanıcıların yapılacaklar listelerini oluşturabileceği ve yönetebileceği bir RESTful API'dir. Uygulama, Gin framework'u kullanılarak geliştirilmiştir ve JWT (JSON Web Token) ile kimlik doğrulama sağlar.
+# 📝 Todo App API
 
-Başlangıç
-Bu adımlar, projeyi yerel ortamınızda çalıştırmanızı sağlayacaktır.
+This application is a **RESTful API** that allows users to create and manage their to-do lists.  
+It is built using the **Gin Framework** and uses **JWT (JSON Web Token)** for authentication.
 
-Gereksinimler
-Go 1.18 veya üstü
-Gin Framework
-JWT kütüphanesi
-Bağımlılıklar için Go modül yönetimi
-Kurulum
-Repoyu klonlayın:
+I also have same project that you can examine: https://github.com/erdemyuksel4/GoTodoApp 
+
+---
+
+## 🚀 Getting Started
+
+Follow the steps below to run the project on your local environment.
+
+### Requirements
+
+- Go 1.18 or higher
+- Gin Web Framework
+- JWT library
+- Go module management (`go mod`)
+
+### Installation
+
+```bash
+# Clone the repository
 git clone https://github.com/erdemyuksel4/todoapp.git
-Gerekli bağımlılıkları yükleyin:
+cd todoapp
 
-bash Kopyala Düzenle cd todoapp go mod tidy Ortam değişkenlerini ayarlayın (isteğe bağlı):
+# Install dependencies
+go mod tidy
 
-Eğer özel bir port kullanmak isterseniz, .env dosyasını oluşturup PORT değerini ayarlayabilirsiniz.
+# (Optional) Set environment variables
+# You can create a .env file and set a value like PORT=9090
 
-Sunucuyu başlatın:
+# Start the server
+go run main.go
 
-bash Kopyala Düzenle go run main.go Sunucu varsayılan olarak localhost:8080 adresinde çalışacaktır.
+By default, the server will run at localhost:8080.
+```
+## API USAGE
 
-API Kullanımı Sağlık Durumu Kontrolü API'nin çalışıp çalışmadığını kontrol etmek için aşağıdaki endpoint'i kullanabilirsiniz:
+#### API Endpoints
 
-http Kopyala Düzenle GET /health Yanıt:
+```http
+GET /api/todos
+GET /api/todobyid/:id
+GET /api/todolists
+PATCH /api/complete/:id
+PATCH /api/changemessage
+POST /api/addtodo
+DELETE /api/deletetodo
+DELETE /api/deletelist
+POST /api/addlist
+```
 
-json Kopyala Düzenle { "status": "up" } Kullanıcı Girişi (Login) Kullanıcı adı ve şifre ile giriş yapabilir ve JWT token alabilirsiniz.
+#### All Todos
 
-http Kopyala Düzenle POST /login Giriş yapmak için aşağıdaki JSON verisini gönderin:
+```http
+  GET /api/todos
+```
+You can see all messages that you have. If you are admin you can see all todos
+#### Get a TodoStep By Step Id
+```http
+  GET /api/todobyid/:id
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `id`      | `string` | 
 
-json Kopyala Düzenle { "username": "your-username", "password": "your-password" } Yanıt:
+#### Get a TodoStep By Step Id
+```http
+  GET /api/todolists
+```
+If you are not admin you can see only yours
 
-json Kopyala Düzenle { "token": "your-jwt-token" } JWT token, daha sonraki API isteklerinde Authorization başlığı ile kullanılmalıdır.
+#### Complete a TodoStep On Your List
+```http
+  PATCH /api/complete/:id
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `id`      | `string` | 
 
-Kullanıcı Bilgileri JWT token'ı ile doğrulama yaptıktan sonra, kullanıcı bilgilerinizi alabilirsiniz:
+#### You can Change The Todo Step Message
+```http
+  PATCH /api/changemessage
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `todoId`      | `int` | 
+| `message`      | `string` | 
 
-http Kopyala Düzenle GET /api/me Yanıt:
+#### Add New Todo Step
+```http
+  POST /api/addtodo
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `listId`      | `int` | 
+| `message`      | `string` | 
 
-json Kopyala Düzenle { "userId": 1, "type": 1 } Todo Listeleri Tüm Todo Listelerini almak için:
+#### Delete Todo Step
+```http
+  DELETE /api/deletetodo
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `todoId`      | `int` | 
 
-http Kopyala Düzenle GET /api/todolists Todo Listesine yeni bir liste eklemek için:
+#### Delete Todo List
+```http
+  DELETE /api/deletelist
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `id`      | `int` | 
 
-http Kopyala Düzenle POST /api/addlist Gönderilecek JSON:
+#### Add New List
+```http
+  POST /api/addlist
+```
+| Parametre | Tip     | 
+| :-------- | :------- | 
+| `title`      | `string` |
 
-json Kopyala Düzenle { "title": "New Todo List" } Todo İşlemleri Tüm Todoları listelemek için:
+Add new list and use this for new steps 
 
-http Kopyala Düzenle GET /api/todos ID'ye Göre Todo'yu almak için:
+  ###
 
-http Kopyala Düzenle GET /api/todobyid/:id Todo'yu Tamamlamak için:
+There is a out.exe file that you can run  
 
-http Kopyala Düzenle PATCH /api/complete/:id Todo Mesajını Değiştirmek için:
+```bash
+  ./out
+```
 
-http Kopyala Düzenle PATCH /api/changemessage Gönderilecek JSON:
-
-json Kopyala Düzenle { "todoId": 1, "message": "New Todo Message" } Todo Silmek için:
-
-http Kopyala Düzenle DELETE /api/deletetodo Gönderilecek JSON:
-
-json Kopyala Düzenle { "todoId": 1 } Liste Silmek Todo Listesini Silmek için:
-
-http Kopyala Düzenle DELETE /api/deletelist Gönderilecek JSON:
-
-json Kopyala Düzenle { "id": 1 } Kimlik Doğrulama Bu uygulama, JWT (JSON Web Token) kullanarak kimlik doğrulaması yapmaktadır. API isteklerinde Authorization başlığı ile geçerli bir token sağlamalısınız.
-
-Örnek başlık:
-
-makefile Kopyala Düzenle Authorization: Bearer your-jwt-token Kullanıcılar Projede tanımlı üç örnek kullanıcı bulunmaktadır:
-
-Kullanıcı Adı: Erdem Şifre: 123 Tür: TodoUser ID: 1
-
-Kullanıcı Adı: user2 Şifre: 321 Tür: TodoUser ID: 2
-
-Kullanıcı Adı: admin Şifre: 123 Tür: Admin ID: 3
-
-Bu kullanıcılar, kimlik doğrulama için kullanılabilir. Kullanıcı adı ve şifre bilgilerini doğru girdiğinizde, JWT token alabilirsiniz.
+  
