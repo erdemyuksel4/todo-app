@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"todoapp/http/handler"
 	"todoapp/http/middleware"
 
@@ -37,5 +38,9 @@ func main() {
 		api.POST("/addlist", handler.AddTodoList)
 
 	}
-	r.Run(":8080") // http://localhost:8080
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	r.Run(":" + port)
 }
