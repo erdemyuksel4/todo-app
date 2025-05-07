@@ -11,7 +11,7 @@ JWT kütüphanesi
 Bağımlılıklar için Go modül yönetimi
 Kurulum
 Repoyu klonlayın:
-git clone https://github.com/kullanici_adi/todoapp.git
+git clone https://github.com/erdemyuksel4/todoapp.git
 Gerekli bağımlılıkları yükleyin:
 
 bash Kopyala Düzenle cd todoapp go mod tidy Ortam değişkenlerini ayarlayın (isteğe bağlı):
